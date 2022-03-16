@@ -5,15 +5,20 @@ let Vue;
 //实现一个install方法
 class VueRouter {
   constructor(options) {
-    console.log(Vue);
     this.$options = options;
     // 保存当前hash到current
+    // current应该是响应式的
+    Vue.util.defineReactive(
+      this,
+      "current",
+      window.location.hash.slice(1) || "/"
+    );
     this.current = "/";
     //监控hashchange
     window.addEventListener("hashchange", () => {
-      console.log(this.current);
+      // console.log(this.current);
       // #/about => /about
-      window.location.hash.slice(1);
+      this.current = window.location.hash.slice(1);
     });
   }
 }
@@ -28,6 +33,8 @@ VueRouter.install = function (_Vue) {
     beforeCreate() {
       //只需要根实例时执行一次
       if (this.$options.router) {
+        // 希望将来任何组件都可以通过$router
+        // 访问路由器实例
         Vue.prototype.$router = this.$options.router;
       }
     },
@@ -64,13 +71,18 @@ VueRouter.install = function (_Vue) {
       // 可以传入一个组件直接渲染
       // 思路：如果可以根据url的hash部分动态匹配这个要渲染的组件
       // window.location.hash
-      // console.log(this.$router.options.routes);
-      // console.log(this.$router.current);
-      console.log(this.$router.options);
-      return h(Home);
+      console.log(this.$router.$options.routes);
+      console.log(this.$router.current);
+      let component = null;
+      const route = this.$router.$options.routes.find((route) => {
+        return route.path === this.$router.current;
+      });
+      console.log(route);
+      if (route) {
+        component = route.component;
+      }
+      return h(component);
     },
-
-    // template: "<a></a>",
   });
 };
 
