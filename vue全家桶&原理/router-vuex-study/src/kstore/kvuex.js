@@ -4,6 +4,25 @@ class Store {
     this.$options = options;
     this._mutations = options.mutations;
     this._actions = options.actions;
+    this._wappedGetters = options.getters;
+
+    //定义computed 选项
+    const computed = {};
+    this.getters = {};
+    //{doubleCount(state){}}
+    const store = this;
+    Object.keys(this._wappedGetters).forEach((key) => {
+      //获取用户定义的getter
+      const fn = store._wappedGetters[key];
+      //转换为computed可以使用五参数形式
+      computed[key] = function () {
+        return fn(store.state);
+      };
+      //为getters定义只读属性
+      Object.defineProperty(store.getters, key, {
+        get: () => store._vm[key],
+      });
+    });
     // api: state;
     // 用户传入的state选项应该是响应式的
     this._vm = new Vue({
@@ -11,6 +30,7 @@ class Store {
         return {
           // 不希望$$state被代理，所以加两个$
           $$state: options.state,
+          computed,
         };
       },
     });

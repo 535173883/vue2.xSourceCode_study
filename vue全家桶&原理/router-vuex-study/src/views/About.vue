@@ -2,7 +2,7 @@
   <div class="about">
     <h1>This is an about page</h1>
     <span>{{ $store.state.count }}</span>
-    <span>{{ key }}</span>
+    <router-view></router-view>
   </div>
 </template>
 <script>
