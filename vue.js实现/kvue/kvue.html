@@ -9,6 +9,8 @@
   <body>
     <div id="app">
       <p>{{counter}}</p>
+      <p k-text="counter"></p>
+      <p k-html="desc"></p>
     </div>
     <!-- <script src="../vue.js"></script> -->
     <script src="./kvue.js"></script>
@@ -19,6 +21,7 @@
         el: "#app",
         data: {
           counter: 1,
+          desc: "<span style='color:red'>我是一朵花</span>",
         },
       });
       setInterval(() => {
