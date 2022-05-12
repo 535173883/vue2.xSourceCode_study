@@ -7,7 +7,7 @@ function defineReactive(obj, key, val) {
     get() {
       // console.log("get", key);
       //依赖收集建立
-      dep.target && dep.addDep(dep.target);
+      Dep.target && dep.addDep(Dep.target);
       return val;
     },
     set(newVal) {
@@ -153,7 +153,6 @@ class Watcher {
   // Dep将来会调用
   update() {
     const val = this.vm[this.key];
-    console.log(this);
     this.updater.call(this.vm, val);
   }
 }
@@ -164,6 +163,7 @@ class Dep {
   constructor() {
     this.deps = [];
   }
+
   addDep(dep) {
     this.deps.push(dep);
   }
