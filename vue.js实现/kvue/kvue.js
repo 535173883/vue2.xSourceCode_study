@@ -151,6 +151,9 @@ class Watcher {
     Dep.target = null;
   }
   // Dep将来会调用
+  // textUpdater(node, val) {
+  //   node.textContent = val;
+  // }
   update() {
     const val = this.vm[this.key];
     this.updater.call(this.vm, val);
@@ -163,7 +166,7 @@ class Dep {
   constructor() {
     this.deps = [];
   }
-
+  // dep就是watcher实例
   addDep(dep) {
     this.deps.push(dep);
   }
